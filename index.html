@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Storizo - Story Prompt Generator</title>
+    <!-- Custom CSS for a clean and responsive design -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
+
+        /* Use border-box for consistent sizing */
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Base styles for all devices */
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(to bottom right, #e0e7ff, #f3e8ff);
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start; /* Aligns content to the top */
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+            color: #1f2937;
+        }
+
+        .main-container {
+            background-color: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            padding: 2rem;
+            padding-top: 0; /* Remove top padding to accommodate the brand name margin */
+            width: 100%;
+            max-width: 56rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .brand-name {
+            font-size: 1.575rem; /* Reduced by 30% */
+            font-weight: 800;
+            margin-top: 0.4in; /* Added margin as requested */
+            margin-bottom: 0;
+        }
+
+        .brand-name .s { color: #ec4899; } /* Pink */
+        .brand-name .t { color: #3b82f6; } /* Blue */
+        .brand-name .o { color: #22c55e; } /* Green */
+        .brand-name .r { color: #eab308; } /* Yellow */
+        .brand-name .i { color: #ef4444; } /* Red */
+        .brand-name .z { color: #6366f1; } /* Indigo */
+        .brand-name .last-o { color: #ec4899; } /* Pink */
+        
+        h1 {
+            font-weight: 600;
+            color: #4338ca;
+            margin-top: 1rem;
+            margin-bottom: 2rem;
+            font-size: 25px;
+        }
+
+        .prompt-container {
+            background-color: #f9fafb;
+            color: #4b5563;
+            font-size: 0.75rem; /* Reduced by 40% */
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border: 2px dashed #c7d2fe;
+            transition: all 0.3s ease-in-out;
+            height: 8rem; /* Adjusted height for smaller text */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top:0.5in;
+        }
+
+        #prompt-text {
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        .buttons-container {
+            margin-top: 1in;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .genre-button, #change-prompt-button {
+            font-weight: 700;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease-in-out;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .genre-button:hover, #change-prompt-button:hover {
+            transform: scale(1.05);
+        }
+
+        .genre-button:focus, #change-prompt-button:focus {
+            outline: none;
+        }
+        
+        /* Define colors for each button */
+        #genre-fantasy { background-color: #ec4899; }
+        #genre-fantasy:hover { background-color: #db2777; }
+        #genre-scifi { background-color: #3b82f6; }
+        #genre-scifi:hover { background-color: #2563eb; }
+        #genre-mystery { background-color: #22c55e; }
+        #genre-mystery:hover { background-color: #16a34a; }
+        #genre-horror { background-color: #ef4444; }
+        #genre-horror:hover { background-color: #dc2626; }
+        #genre-childrens { background-color: #eab308; }
+        #genre-childrens:hover { background-color: #d9a007; }
+        #change-prompt-button { background-color: #6366f1; }
+        #change-prompt-button:hover { background-color: #4f46e5; }
+        
+        .new-prompt-container {
+            margin-top: 2rem;
+        }
+
+        /* The glowing effect for the active button */
+        .active-glow {
+            animation: glow 1.5s infinite alternate;
+        }
+        
+        /* Define specific glow colors for each button using their background color */
+        #genre-fantasy.active-glow { box-shadow: 0 0 30px 10px rgba(236, 72, 153, 0.75); }
+        #genre-scifi.active-glow { box-shadow: 0 0 30px 10px rgba(59, 130, 246, 0.75); }
+        #genre-mystery.active-glow { box-shadow: 0 0 30px 10px rgba(34, 197, 94, 0.75); }
+        #genre-horror.active-glow { box-shadow: 0 0 30px 10px rgba(239, 68, 68, 0.75); }
+        #genre-childrens.active-glow { box-shadow: 0 0 30px 10px rgba(234, 179, 8, 0.75); }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 5px 2px rgba(255, 255, 255, 0.7); }
+            to {  }
+        }
+        
+        /* Media queries for responsiveness */
+        /* For screens larger than 640px (sm) */
+        @media (min-width: 640px) {
+            .main-container { padding: 3rem; padding-top: 0; }
+            .brand-name { font-size: 2.1rem; } /* Reduced by 30% */
+            h2 { font-size: 39px; } /* Reduced by 30% */
+            .prompt-container {
+                font-size: 0.9rem; /* Reduced by 40% */
+                padding: 2rem;
+            }
+            .buttons-container { gap: 1rem; }
+        }
+
+        /* For screens larger than 768px (md) */
+        @media (min-width: 768px) {
+            .main-container { padding: 4rem; padding-top: 0; }
+            .brand-name { font-size: 2.625rem; } /* Reduced by 30% */
+            h2 { font-size: 42px; } /* Reduced by 30% */
+            .prompt-container {
+                font-size: 1.125rem; /* Reduced by 40% */
+                padding: 2rem;
+            }
+        }
+        
+        /* For screens smaller than 640px (default) */
+        @media (max-width: 639px) {
+            h2 { font-size: 35px; } /* Reduced by 30% */
+        }
+    </style>
+</head>
+<body >
+
+    <!-- Main container for the app -->
+    <div class="main-container">
+
+        <div class="brand-name">
+            <span class="s">S</span><span class="t">t</span><span class="o">o</span><span class="r">r</span><span class="i">i</span><span class="z">z</span><span class="last-o">o</span>
+        </div>
+        
+        <h1>Story Writing Ideas Prompt</h1>
+
+        <!-- The container for the prompt text -->
+        <div class="prompt-container">
+            <p id="prompt-text">
+                Choose a genre to get your first story prompt!
+            </p>
+        </div>
+
+        <!-- Container for genre buttons -->
+        <div class="buttons-container">
+            <button id="genre-fantasy" class="genre-button">
+                Fantasy
+            </button>
+            <button id="genre-scifi" class="genre-button">
+                Sci-Fi
+            </button>
+            <button id="genre-mystery" class="genre-button">
+                Mystery
+            </button>
+            <button id="genre-horror" class="genre-button">
+                Horror
+            </button>
+            <button id="genre-childrens" class="genre-button">
+                Children's
+            </button>
+        </div>
+
+        <!-- Button to get a new prompt -->
+        <div class="new-prompt-container">
+            <button id="change-prompt-button">
+                New Prompt
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // Store all prompts in a single object, categorized by genre.
+        const prompts = {
+            'fantasy': [
+                "A young baker discovers that their gingerbread cookies can bring inanimate objects to life, but only for an hour.",
+                "The last librarian on Earth guards a collection of books that contain fragments of the planet's lost magic.",
+                "A grumpy wizard loses his wand and has to ask the forest animals for help to find it."
+            ],
+            'scifi': [
+                "A seasoned space pilot, on her final mission, finds an ancient, derelict ship broadcasting a cryptic message in a language no one has ever heard.",
+                "In a world where memories can be bought and sold, a woman discovers a fragment of a memory she knows isn't hers, yet it holds a terrible secret.",
+                "A deep-space scout receives a message from Earth, dated 200 years in the future, warning of an impending ecological collapse."
+            ],
+            'mystery': [
+                "A detective who can only solve crimes while listening to classical music must find a thief who steals only antique typewriters.",
+                "A small town is rocked by a series of events that seem to mirror a forgotten local legend about a spectral train.",
+                "A renowned art historian is found dead in a locked room. The only clue is a single, half-eaten peach on the floor."
+            ],
+            'horror': [
+                "The last person on Earth is sitting alone in a room. There's a knock on the door.",
+                "A seemingly perfect suburban neighborhood is revealed to be a hunting ground for a creature that can mimic human voices.",
+                "A child's imaginary friend is trying to get out of the mirror."
+            ],
+            'childrens': [
+                "What if your teddy bear could talk, but only when you were doing your homework?",
+                "You find a key that opens a door to any place you can imagine. Where do you go first?",
+                "A magical creature made of clouds and rainbows moves into your treehouse and teaches you how to fly."
+            ]
+        };
+
+        let currentGenre = 'fantasy'; // Set default genre to Fantasy on page load
+        let activeGenreButton = null; // Variable to track the currently active button
+
+        const promptTextElement = document.getElementById('prompt-text');
+        const changePromptButton = document.getElementById('change-prompt-button');
+        const genreButtons = document.querySelectorAll('.genre-button');
+
+        // Function to get a random prompt from the current genre
+        function getRandomPrompt() {
+            const currentPrompts = prompts[currentGenre];
+            const randomIndex = Math.floor(Math.random() * currentPrompts.length);
+            return currentPrompts[randomIndex];
+        }
+
+        // Function to update the prompt on the page
+        function updatePrompt() {
+            const randomPrompt = getRandomPrompt();
+            promptTextElement.textContent = randomPrompt;
+        }
+
+        // Add event listeners to each genre button
+        genreButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove glow from the previously active button
+                if (activeGenreButton) {
+                    activeGenreButton.classList.remove('active-glow');
+                }
+
+                // The genre ID is used to get the key from the prompts object
+                currentGenre = button.id.replace('genre-', '');
+
+                // Add glow to the newly clicked button
+                button.classList.add('active-glow');
+                activeGenreButton = button;
+
+                updatePrompt();
+            });
+        });
+
+        // Add event listener to the "New Prompt" button
+        changePromptButton.addEventListener('click', updatePrompt);
+        
+        // On page load, set the default genre to Fantasy and apply the glow
+        document.addEventListener('DOMContentLoaded', () => {
+            const fantasyButton = document.getElementById('genre-fantasy');
+            fantasyButton.classList.add('active-glow');
+            activeGenreButton = fantasyButton;
+            updatePrompt();
+        });
+    </script>
+
+</body>
+</html>
